@@ -41,7 +41,17 @@ parameters:
     - custom_constraint: rackconnect.network
   master_server:
     type: string
-    
+  ansible_branch:
+    type: string
+    default: stable
+    label: Git Branch or Tag for Ansible Roles
+    description: The Ansible Roles will be pulled from Git, using the tag or branch provided
+  ansible_repo:
+    type: string
+    default: https://github.com/rackspace-orchestration-templates/ansible-roles.git
+    label: Git Repo for Ansible Roles
+    description: The Ansible Roles will be pulled from Git, using the repo provided
+
 resources:
   upload_role_config:
     type: OS::Heat::SoftwareConfig
@@ -49,10 +59,15 @@ resources:
       group: script
       outputs:
       - name: results
-      config: |
-        #!/bin/bash
-        set -e
-        git clone -b 'stable' --single-branch --progress https://github.com/rackspace-orchestration-templates/ansible-roles.git /etc/ansible/roles
+      config:
+        str_replace:
+          template: |
+            #!/bin/bash
+            set -e
+            git clone -b 'tag' --single-branch --progress repository /etc/ansible/roles > $heat_outputs_path.results 2>&1
+          params:
+            tag: { get_param: ansible_branch}
+            repository: { get_param: ansible_repo }
   magento_config:
     type: OS::Heat::SoftwareConfig
     properties:
@@ -89,8 +104,11 @@ resources:
         - { name: 'obj', port: '6379', persistent: 'FALSE', maxmemory: '1gb' }
         - { name: 'ses', port: '6380', persistent: 'TRUE', maxmemory: '1gb' }
         nginx_vhost_template: "magento_secondary"
+        magento_vhost_template: "magento_secondary"
         nginx_upstream_server: { get_param: master_server }
         nginx_vhost_str: { get_param: apache_default_domain }
+        magento_role: 'secondary'
+        magento_sftp_password: { get_param: magento_pass }
         firewall_global_rules: [ "0.0.0.0,0,22,tcp", "0.0.0.0,0,80,tcp", "0.0.0.0,0,443,tcp"]
       config:
         get_resource: magento_config

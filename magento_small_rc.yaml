@@ -79,11 +79,18 @@ parameters:
       description: |
         You must agree to the Magento Community Edition License
         which can be found here: http://opensource.org/licenses/osl-3.0.php
-  magento_samples:
-    type: boolean
-    default: False
-    label: Include Sample Data?
-    description: Include Magento Sample Data
+  magento_install:
+    type: string
+    default: "Fresh install of the latest Magento CE 1.9.x release"
+    label: How should Magento be deployed?
+    description: |
+      This option determines whether or not to install Magento and/or the sample
+      data, or if you will need to upload your own Magento code.
+    constraints:
+    - allowed_values:
+      - "Fresh install of the latest Magento CE 1.9.x release"
+      - "Fresh install of the latest Magento CE 1.9.x release (including sample data)"
+      - "Don't install Magento. I will upload an existing Magento site (see instructions)"
   rc_network_name:
     type: string
     label: RackConnect Network
@@ -169,6 +176,8 @@ resources:
   database_pass:
     type: OS::Heat::RandomString
   holland_pass:
+    type: OS::Heat::RandomString
+  ssh_pass:
     type: OS::Heat::RandomString
   #SSH Key
   ssh_key:
@@ -413,6 +422,7 @@ resources:
           master_server: { get_attr: [ magento_server, networks, { get_param: rc_network_name }, 0] }
           ansible_branch: { get_param: ansible_branch}
           ansible_repo: { get_param: ansible_repo }
+          magento_pass: { get_attr: [magento_pass, value] }
           server_name:
             str_replace:
               template: stack-secondary-%index%

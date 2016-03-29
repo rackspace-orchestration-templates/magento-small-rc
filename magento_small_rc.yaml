@@ -17,6 +17,8 @@ description: |
  with a Cloud Database running
  [Percona](https://www.percona.com/software/mysql-database/percona-server).
 
+ This template will only function with RackConnect v3.
+
 parameter_groups:
 - label: Magento Settings
   parameters:

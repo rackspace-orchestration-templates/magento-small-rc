@@ -11,14 +11,12 @@ test-cases:
     ssh_key_file: tmp/private_key # File to write with ssh_private_key
     tests:
     - check_lb_login:
-      script:
-        commands:
-          - command: "./test/script/magento_login.py"
-            command_args:
-              - { get_output: magento_public_ip }
-              - { get_output: magento_public_url }
-              - { get_output: magento_login_user }
-              - { get_output: magento_login_password }
+        script:
+          commands:
+            - command: "./test/script/magento_login.py"
+              command_args:
+                - { get_output: magento_public_ip }
+                - { get_output: magento_public_url }
     - check_master_login:
         script:
           commands:
@@ -26,8 +24,6 @@ test-cases:
               command_args:
                 - { get_output: server_ip }
                 - { get_output: magento_public_url }
-                - { get_output: magento_login_user }
-                - { get_output: magento_login_password }
     - magento_server:
         fabric:
           # Fabric environment settings to use while running envassert script
@@ -62,8 +58,6 @@ test-cases:
               command_args:
                 - { get_output: magento_public_ip }
                 - { get_output: magento_public_url }
-                - { get_output: magento_login_user }
-                - { get_output: magento_login_password }
     - check_master_login:
         script:
           commands:
@@ -71,8 +65,6 @@ test-cases:
               command_args:
                 - { get_output: server_ip }
                 - { get_output: magento_public_url }
-                - { get_output: magento_login_user }
-                - { get_output: magento_login_password }
     - magento_server:
         fabric:
           # Fabric environment settings to use while running envassert script
@@ -101,15 +93,13 @@ test-cases:
     ssh_private_key: { get_output: ssh_private_key } # Fetch from output-list of stack
     ssh_key_file: tmp/private_key # File to write with ssh_private_key
     tests:
-      - check_lb_login:
+    - check_lb_login:
           script:
             commands:
               - command: "./test/script/magento_login.py"
                 command_args:
                   - { get_output: magento_public_ip }
                   - { get_output: magento_public_url }
-                  - { get_output: magento_login_user }
-                  - { get_output: magento_login_password }
       - check_master_login:
           script:
             commands:
@@ -117,8 +107,6 @@ test-cases:
                 command_args:
                   - { get_output: server_ip }
                   - { get_output: magento_public_url }
-                  - { get_output: magento_login_user }
-                  - { get_output: magento_login_password }
       - check_secondary_login:
           script:
             commands:
@@ -126,8 +114,6 @@ test-cases:
                 command_args:
                   - { get_output: secondary_ips }
                   - { get_output: magento_public_url }
-                  - { get_output: magento_login_user }
-                  - { get_output: magento_login_password }
       - master_server:
           fabric:
             # Fabric environment settings to use while running envassert script

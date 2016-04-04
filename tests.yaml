@@ -107,13 +107,13 @@ test-cases:
               command_args:
                 - { get_output: server_ip }
                 - { get_output: magento_public_url }
-    - check_secondary_login:
-        script:
-          commands:
-            - command: "./test/script/magento_login.py"
-              command_args:
-                - { get_output: secondary_ips }
-                - { get_output: magento_public_url }
+    # - check_secondary_login:
+    #     script:
+    #       commands:
+    #         - command: "./test/script/magento_login.py"
+    #           command_args:
+    #             - { get_output: secondary_ips }
+    #             - { get_output: magento_public_url }
     - master_server:
         fabric:
           # Fabric environment settings to use while running envassert script
@@ -130,19 +130,19 @@ test-cases:
             disable_known_hosts: True
             use_ssh_config: True
             fabfile: test/fabric/magento.py # Path to envassert test
-    - secondary_server:
-        fabric:
-          # Fabric environment settings to use while running envassert script
-          # http://docs.fabfile.org/en/latest/usage/env.html
-          env:
-            user: root
-            key_filename: tmp/private_key
-            hosts: { get_output: secondary_ips } # Fetch from output-list of stack
-            tasks:
-              - artifacts
-              - check
-            abort_on_prompts: True
-            connection_attempts: 3
-            disable_known_hosts: True
-            use_ssh_config: True
-            fabfile: test/fabric/magento.py # Path to envassert test
+    # - secondary_server:
+    #     fabric:
+    #       # Fabric environment settings to use while running envassert script
+    #       # http://docs.fabfile.org/en/latest/usage/env.html
+    #       env:
+    #         user: root
+    #         key_filename: tmp/private_key
+    #         hosts: { get_output: secondary_ips } # Fetch from output-list of stack
+    #         tasks:
+    #           - artifacts
+    #           - check
+    #         abort_on_prompts: True
+    #         connection_attempts: 3
+    #         disable_known_hosts: True
+    #         use_ssh_config: True
+    #         fabfile: test/fabric/magento.py # Path to envassert test
